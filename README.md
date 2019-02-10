@@ -1,14 +1,12 @@
 # docker plex
 This is a Dockerfile to set up ([https://plex.tv/](https://plex.tv/) "Plex Media Server") - ([https://plex.tv/](https://plex.tv/))
 
-If you've have paid for plexpass goto [https://github.com/timhaak/docker-plexpass](https://github.com/timhaak/docker-plexpass)
-
 ## Instructions
 ### Getting the docker image
 Build from docker file
 
 ```
-git clone git@github.com:timhaak/docker-plex.git
+git clone https://github.com/timhaak/docker-plex.git
 cd docker-plex
 docker build -t timhaak/plex .
 ```
@@ -66,7 +64,32 @@ docker run -e RUN_AS_ROOT=TRUE ... timhaak/plex
 or add it to an envfile that can be included through the command line:
 
 ```
-docker run --envfile=*filename* ... timhaak/plex
+docker run --env-file=*filename* ... timhaak/plex
+```
+
+## Mac and Apple TV Usage
+
+For Docker on the mac and AppleTV discovery of the server you will need to open up more ports. The reason is that net=host doesn't work as intended. A recommended startup would be something like this :
+
+```
+docker run \
+--restart=always \
+-d             \
+--name plex    \
+-h *your_host_name*   \
+-p 32400:32400 \
+-p 1900:1900/udp \
+-p 3005:3005 \
+-p 5353:5353/udp \
+-p 8324:8324 \
+-p 32410:32410/udp \
+-p 32412:32412/udp \
+-p 32413:32413/udp \
+-p 32414:32414/udp \
+-p 32469:32469 \
+-v /*your_config_location*:/config \
+-v /*your_videos_location*:/data   \
+timhaak/plex
 ```
 
 [1]: https://support.plex.tv/hc/en-us/articles/204059436-Finding-your-account-token-X-Plex-Token
